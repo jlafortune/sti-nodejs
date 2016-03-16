@@ -7,21 +7,21 @@ MAINTAINER SoftwareCollections.org <sclorg@redhat.com>
 
 EXPOSE 8080
 
-ENV NODEJS_VERSION 0.10
+ENV NODEJS_VERSION 5.8.0
 
-LABEL io.k8s.description="Platform for building and running Node.js 0.10 applications" \
-      io.k8s.display-name="Node.js 0.10" \
+LABEL io.k8s.description="Platform for building and running Node.js 5.8.0 applications" \
+      io.k8s.display-name="Node.js 5.8.0" \
       io.openshift.expose-services="8080:http" \
-      io.openshift.tags="builder,nodejs,nodejs010" \
+      io.openshift.tags="builder,nodejs,nodejs580" \
       com.redhat.dev-mode="DEV_MODE:false" \
       com.redhat.deployments-dir="/opt/app-root/src" \
       com.redhat.dev-mode.port="DEBUG_PORT:5858"
 
-RUN yum install -y centos-release-scl && \
-    INSTALL_PKGS="nodejs010" && \
-    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum clean all -y
+ENV NODE_VERSION 5.8.0
+
+RUN curl -k -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
+  && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
+  && rm "node-v$NODE_VERSION-linux-x64.tar.xz"     
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
